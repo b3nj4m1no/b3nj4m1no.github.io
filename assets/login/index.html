@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Animated Login Form using Html & CSS Only</title>
+<link rel="stylesheet" href="assets/css/stylesheet.css">
+</head>
+<body>
+<section>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    <div class="signin">
+        <div class="content">
+            <h2>Sign In</h2>
+            <div class="form">
+                <div class="inputBox">
+                    <input id="username" type="text" required> <i>Username</i> 
+                </div>
+                <div class="inputBox">
+                    <input id="password" type="password" required onkeypress="handleKeyPress(event)"> <i>Password</i> 
+                </div>
+                <div class="links">
+                    <a href="#">Forgot Password</a> <a href="#">Signup</a> 
+                </div>
+                <div class="inputBox">
+                    <input type="submit" value="Login" onclick="validateCredentials()">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function validateCredentials() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        fetch('credentials.txt')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                var credentials = parseCredentials(data);
+                if (credentials.hasOwnProperty(username) && credentials[username] === password) {
+                    fetchSuccessPage();
+                } else {
+                    alert("Credenziali non valide. Riprova.");
+                }
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    }
+
+    function fetchSuccessPage() {
+        fetch('flag.txt')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                window.location.href = "success.html?message=" + encodeURIComponent(data);
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+    }
+
+    function parseCredentials(data) {
+        var lines = data.split('\n');
+        var credentials = {};
+        lines.forEach(line => {
+            var parts = line.split(':');
+            var username = parts[0].trim();
+            var password = parts[1].trim();
+            credentials[username] = password;
+        });
+        return credentials;
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            validateCredentials();
+        }
+    }
+</script>
+
+</body>
+</html>

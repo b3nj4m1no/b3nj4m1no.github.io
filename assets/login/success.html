@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Success</title>
+</head>
+<body>
+<script>
+    // Recupera il messaggio dalla query string
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var message = urlParams.get('message');
+
+    // Visualizza il messaggio nella pagina
+    var h1 = document.createElement('h1');
+    var text = document.createTextNode(message);
+    h1.appendChild(text);
+    document.body.appendChild(h1);
+</script>
+</body>
+</html>
